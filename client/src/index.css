@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cyber-darker text-white;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-cyber-surface/80 backdrop-blur-lg border border-cyber-primary/20 rounded-xl;
+  }
+}
