@@ -5,6 +5,9 @@ import { IoSend } from 'react-icons/io5'
 import { SiLeetcode, SiCodechef, SiCodeforces } from 'react-icons/si'
 import axios from 'axios'
 
+// API URL from environment variable or fallback to localhost
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
   const [status, setStatus] = useState({ type: '', message: '' })
@@ -20,7 +23,7 @@ export default function Contact() {
     setStatus({ type: '', message: '' })
 
     try {
-      const response = await axios.post('http://localhost:5000/api/contact', formData)
+      const response = await axios.post(`${API_URL}/contact`, formData)
       if (response.data.success) {
         setStatus({ type: 'success', message: 'Message sent successfully! I\'ll get back to you soon.' })
         setFormData({ name: '', email: '', subject: '', message: '' })
