@@ -8,15 +8,30 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  methods: ['GET', 'POST']
+  origin: '*',
+  methods: ['GET', 'POST'],
+  credentials: true
 }));
+
 app.use(express.json());
+
+// Health check (MUST be before other routes)
+app.get('/', (req, res) => {
+  res.json({ status: 'OK', message: 'Server is running' });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    email: process.env.EMAIL_USER ? 'Configured' : 'Not configured'
+  });
+});
 
 // Email transporter
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  port: process.env.EMAIL_PORT || 587,
   secure: false,
   auth: {
     user: process.env.EMAIL_USER,
@@ -26,18 +41,18 @@ const transporter = nodemailer.createTransport({
 
 // Validation
 const validateContact = [
-  body('name').trim().isLength({ min: 2 }).withMessage('Name too short'),
-  body('email').isEmail().withMessage('Invalid email'),
-  body('subject').trim().isLength({ min: 5 }).withMessage('Subject too short'),
-  body('message').trim().isLength({ min: 10 }).withMessage('Message too short')
+  body('name').trim().isLength({ min: 2 }),
+  body('email').isEmail(),
+  body('subject').trim().isLength({ min: 5 }),
+  body('message').trim().isLength({ min: 10 })
 ];
 
-// Contact endpoint - EMAIL ONLY
+// Contact endpoint
 app.post('/api/contact', validateContact, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, error: errors.array()[0].msg });
+      return res.status(400).json({ success: false, error: 'Invalid input' });
     }
 
     const { name, email, subject, message } = req.body;
@@ -47,12 +62,7 @@ app.post('/api/contact', validateContact, async (req, res) => {
       from: `"Portfolio" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO,
       subject: `New Contact: ${subject}`,
-      html: `
-        <h2>New Message from ${name}</h2>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p>${message}</p>
-      `
+      html: `<h2>From: ${name}</h2><p>Email: ${email}</p><p>${message}</p>`
     });
 
     // Auto-reply
@@ -60,17 +70,20 @@ app.post('/api/contact', validateContact, async (req, res) => {
       from: `"Gonugutla Varun" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Thank you, ${name}!`,
-      html: `<p>Hi ${name}, I received your message and will reply soon.</p>`
+      html: `<p>I received your message and will reply soon.</p>`
     });
 
-    res.json({ success: true, message: 'Sent successfully!' });
+    res.json({ success: true, message: 'Sent!' });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, error: 'Failed to send email' });
+    res.status(500).json({ success: false, error: 'Failed to send' });
   }
 });
 
-app.listen(5000, () => {
-  console.log('🚀 Server running on http://localhost:5000');
+// IMPORTANT: Use 0.0.0.0 to bind to all interfaces
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📧 Email: ${process.env.EMAIL_TO || 'Not set'}`);
 });
