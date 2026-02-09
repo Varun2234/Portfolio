@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const { body, validationResult } = require('express-validator');
 require('dotenv').config();
 
 const app = express();
 
-// Middleware - CORS (allow all for now)
+// CORS
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
@@ -14,6 +14,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Set SendGrid API key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Health check
 app.get('/', (req, res) => {
@@ -28,25 +31,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Email transporter - FIXED for Render
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-// Verify transporter on startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('❌ Email transporter error:', error.message);
-  } else {
-    console.log('✅ Email transporter ready');
-  }
-});
-
-// Validation - FIXED with error messages
+// Validation
 const validateContact = [
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
   body('email').isEmail().withMessage('Invalid email format'),
@@ -69,10 +54,10 @@ app.post('/api/contact', validateContact, async (req, res) => {
     const { name, email, subject, message } = req.body;
     console.log('Received contact form:', { name, email, subject });
 
-    // Send email to you
-    await transporter.sendMail({
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
+    // Email to you
+    const msgToYou = {
       to: process.env.EMAIL_TO,
+      from: process.env.EMAIL_USER,
       subject: `New Contact: ${subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e1a; color: #ffffff; padding: 30px; border-radius: 10px; border: 2px solid #00d4ff;">
@@ -86,12 +71,12 @@ app.post('/api/contact', validateContact, async (req, res) => {
           <p style="font-size: 12px; color: #94a3b8;">Received on ${new Date().toLocaleString()}</p>
         </div>
       `
-    });
+    };
 
-    // Send auto-reply to sender
-    await transporter.sendMail({
-      from: `"Gonugutla Varun" <${process.env.EMAIL_USER}>`,
+    // Auto-reply to sender
+    const msgToSender = {
       to: email,
+      from: process.env.EMAIL_USER,
       subject: `Thank you for contacting me, ${name}!`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e1a; color: #ffffff; padding: 30px; border-radius: 10px; border: 2px solid #00d4ff;">
@@ -101,13 +86,20 @@ app.post('/api/contact', validateContact, async (req, res) => {
           <p style="color: #94a3b8; font-size: 12px;">This is an automated response.</p>
         </div>
       `
-    });
+    };
+
+    // Send both emails
+    await sgMail.send(msgToYou);
+    await sgMail.send(msgToSender);
 
     console.log('✅ Emails sent successfully');
     res.json({ success: true, message: 'Message sent successfully!' });
 
   } catch (error) {
     console.error('❌ Email error:', error.message);
+    if (error.response) {
+      console.error('SendGrid error:', error.response.body);
+    }
     res.status(500).json({ 
       success: false, 
       error: 'Failed to send email: ' + error.message 
