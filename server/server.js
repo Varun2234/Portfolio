@@ -6,11 +6,17 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware
+// Middleware - CORS with proper origin handling
+const allowedOrigins = [
+  'https://portfolio-f5pv.onrender.com',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: '*',
+  origin: allowedOrigins,
   methods: ['GET', 'POST'],
-  credentials: true
+  credentials: false
 }));
 
 app.use(express.json());
@@ -36,6 +42,15 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  }
+});
+
+// Verify transporter on startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('❌ Email transporter error:', error.message);
+  } else {
+    console.log('✅ Email transporter ready');
   }
 });
 
@@ -77,8 +92,9 @@ app.post('/api/contact', validateContact, async (req, res) => {
     res.json({ success: true, message: 'Sent!' });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, error: 'Failed to send' });
+    console.error('Email error:', error.message);
+    console.error('Full error:', error);
+    res.status(500).json({ success: false, error: 'Failed to send email', details: error.message });
   }
 });
 
