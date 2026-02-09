@@ -2,17 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-cyber-darker text-white;
+    @apply bg-cyber-darker text-white font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+  ::selection {
+    background: rgba(0, 212, 255, 0.3);
+    color: #00ffcc;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-cyber-surface/80 backdrop-blur-lg border border-cyber-primary/20 rounded-xl;
+    @apply bg-cyber-surface/60 backdrop-blur-xl border border-cyber-primary/20 rounded-2xl;
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.1);
+  }
+  .neon-text {
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  }
+  .gradient-text {
+    @apply bg-gradient-to-r from-cyber-primary via-cyber-accent to-cyber-secondary bg-clip-text text-transparent;
+  }
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] hover:-translate-y-1;
+  }
+  .cyber-grid {
+    background-image: 
+      linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
