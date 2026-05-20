@@ -77,7 +77,7 @@ export default function Contact() {
               </div>
               <div>
                 <h3 className="text-sm text-ocean-foam">Location</h3>
-                <p className="text-lg text-white">NIT Raipur, Chhattisgarh, India</p>
+                <p className="text-lg text-white">Anantapur, Andhra Pradesh, India</p>
               </div>
             </div>
 

@@ -3,7 +3,7 @@ import { HiArrowDown, HiMail } from 'react-icons/hi'
 
 export default function Hero() {
   const stats = [
-    { value: '8.16', label: 'CGPA' },
+    { value: '8.2', label: 'CGPA' },
     { value: '1700+', label: 'LeetCode Rating' },
     { value: '1050+', label: 'Problems Solved' },
     { value: '3★', label: 'CodeChef' },

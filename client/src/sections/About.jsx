@@ -45,9 +45,9 @@ export default function About() {
             {/* Photo Placeholder */}
             <div className="relative group">
               <div className="w-48 h-48 rounded-2xl overflow-hidden border-4 border-cyber-primary/30 group-hover:border-cyber-primary transition-all duration-300 shadow-[0_0_30px_rgba(0,212,255,0.2)]">
-                {/* Replace src with your actual photo */}
+                {/* Portfolio photo */}
                 <img 
-                  src="/your-photo.jpg" 
+                  src="/portfolio-image.svg" 
                   alt="Gonugutla Varun" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -81,7 +81,7 @@ export default function About() {
                 </div>
                 <div className="flex items-center justify-center md:justify-start gap-3 text-ocean-foam">
                   <HiAcademicCap className="text-cyber-secondary text-xl" />
-                  <span>Pre-final Year Student at NIT Raipur</span>
+                  <span>2026 Graduate from NIT Raipur</span>
                 </div>
               </div>
 

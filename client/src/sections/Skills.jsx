@@ -3,7 +3,8 @@ import {
   SiReact, SiNodedotjs, SiExpress, SiMongodb, SiPostgresql,
   SiJavascript, SiPython, SiCplusplus, SiHtml5, SiCss3,
   SiTailwindcss, SiGit, SiGithub, SiFigma, SiPostman,
-  SiStripe, SiRazorpay, SiScikitlearn, SiPandas
+  SiStripe, SiRazorpay, SiScikitlearn, SiPandas, SiTypescript,
+  SiNestjs, SiTypeorm
 } from 'react-icons/si'
 import { FaDatabase, FaServer, FaCode, FaLayerGroup, FaNetworkWired, FaMemory } from 'react-icons/fa'
 import { BsDiagram3Fill } from 'react-icons/bs'
@@ -17,6 +18,7 @@ const skillCategories = [
       { name: 'C++', icon: SiCplusplus },
       { name: 'Python', icon: SiPython },
       { name: 'JavaScript', icon: SiJavascript },
+      { name: 'TypeScript', icon: SiTypescript },
     ]
   },
   {
@@ -36,6 +38,8 @@ const skillCategories = [
     color: 'cyber-secondary',
     skills: [
       { name: 'Node.js', icon: SiNodedotjs },
+      { name: 'NestJS', icon: SiNestjs },
+      { name: 'TypeORM', icon: SiTypeorm },
       { name: 'Express.js', icon: SiExpress },
       { name: 'REST APIs', icon: FaServer },
       { name: 'JWT Auth', icon: FaCode },

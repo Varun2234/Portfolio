@@ -1,16 +1,34 @@
 import { motion } from 'framer-motion'
 import { HiBriefcase, HiAcademicCap, HiExternalLink } from 'react-icons/hi'
 import { SiOpenai } from 'react-icons/si'
-import { FaCode, FaPython, FaBrain } from 'react-icons/fa'
+import { FaCode, FaPython, FaBrain, FaServer } from 'react-icons/fa'
 
 const experiences = [
+  {
+    title: 'Backend Developer Intern',
+    company: 'Ninja Studios',
+    type: 'Remote Internship',
+    duration: 'Feb 2026 – May 2026',
+    icon: FaServer,
+    color: 'cyber-primary',
+    link: 'https://drive.google.com/file/d/1U_9xnQS6UsvHQnpk7T6EBjGbBKUpTBj_/view',
+    description: 'Architected scalable backend services using NestJS and TypeORM, implementing AWS Lambda functions and automating CSV data processing pipelines.',
+    achievements: [
+      'Implemented RESTful APIs using NestJS framework with TypeORM for database management',
+      'Developed AWS Lambda functions for serverless data processing and automation',
+      'Architected CSV-based automated data seeding to streamline local backend testing workflows',
+      'Developed Model Context Protocol (MCP) server for seamless integration',
+      'Implemented Git CI/CD pipeline and Husky pre-commit hooks for code quality enforcement',
+      'Reduced pipeline execution time from 17+ minutes to under 2 minutes'
+    ]
+  },
   {
     title: 'AI Trainer',
     company: 'Outlier AI',
     type: 'Remote Internship',
     duration: 'Dec 2024 – Jan 2025',
     icon: SiOpenai,
-    color: 'cyber-primary',
+    color: 'cyber-secondary',
     link: '#',
     description: 'Collaborated on Reinforcement Learning from Human Feedback (RLHF) projects to improve Large Language Models (LLMs).',
     achievements: [

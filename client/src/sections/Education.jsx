@@ -6,9 +6,9 @@ const education = [
     degree: 'B.Tech in Information Technology',
     institution: 'National Institute of Technology Raipur',
     year: '2022 - 2026',
-    grade: '8.16/10.0 CGPA',
+    grade: '8.2/10.0 CGPA',
     color: 'cyber-primary',
-    details: 'Pursuing B.Tech with focus on Software Development, Data Structures, Algorithms, and Machine Learning'
+    details: 'B.Tech with focus on Software Development, Data Structures, Algorithms, and Machine Learning'
   },
   {
     degree: 'Intermediate (Class XII)',
